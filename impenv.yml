@@ -1,0 +1,35 @@
+name: impenv
+channels:
+    - conda-forge
+    - salilab
+
+dependencies:
+
+# basics
+    - python=3
+    - numpy
+    - scipy
+    - matplotlib
+    - tqdm
+    - biopython
+    - joblib
+    - pandas
+    - xlrd
+
+# IMP specific
+    - cmake
+    - cgal
+    - boost
+    - fftw
+    - eigen
+    - gsl
+    - hdf5
+    - opencv
+    - swig
+    - libtau
+    - protobuf
+    - log4cxx
+    - gperftools
+    - openmp
+    - openmpi
+    - ann
