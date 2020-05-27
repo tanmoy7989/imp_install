@@ -1,15 +1,8 @@
 #!/bin/bash
 
-# download my version of IMP and post-processing tools
-git clone https://github.com/tanmoy7989/imp.git
-
-git clone https://github.com/tanmoy7989/PMI_analysis.git
-
-git clone https://github.com/tanmoy7989/imp-sampcon.git
-
 # create new conda environment from yml file
 # this needs to be in the same directory as this script
-conda env create -f tsanyal_IMP.yml
+conda env create -f impenv.yml
 
 # clean up un-necessary tarballs
 conda clean -t

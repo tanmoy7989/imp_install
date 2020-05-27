@@ -1,4 +1,4 @@
-name: impenv
+name: %(ENVNAME)s
 channels:
     - conda-forge
     - salilab
