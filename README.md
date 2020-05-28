@@ -19,7 +19,7 @@ and PMI_Analysis are also installed.
 
 ### Supported platforms
 
-a) Linux (tested on Ubuntu 16.04/18.04)
+a) Linux (tested on Ubuntu 16.04 / 18.04, Fedora-31)
 b) Mac OSX (tested on Mojave)
 c) UCSF Wynton cluster (not working fully: WIP)
 
