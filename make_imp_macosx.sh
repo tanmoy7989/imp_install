@@ -1,21 +1,7 @@
 #!/bin/bash
 
-# download my version of IMP and post-processing tools
-git clone https://github.com/tanmoy7989/imp.git
-
-git clone https://github.com/tanmoy7989/PMI_analysis.git
-
-git clone https://github.com/tanmoy7989/imp-sampcon.git
-
-# create new conda environment from yml file
-# this needs to be in the same directory as this script
-conda env create -f tsanyal_IMP.yml
-
-# clean up un-necessary tarballs
-conda clean -t
-
-# activate this conda environment
-conda activate impenv
+eval "$(conda shell.bash hook)"
+conda activate $1
 
 # setup python env
 PYTHON_ROOT=`python -c "import sys; print(sys.prefix)"`
@@ -31,8 +17,8 @@ CMAKE_INC=$CONDA_PREFIX/include
 CGAL_DIR=$CONDA_PREFIX/lib/cmake/CGAL
 
 # create a new directory in which to build IMP
+cd $2
 mkdir ./imp_release
-
 cd ./imp_release
 
 # build IMP
@@ -45,4 +31,4 @@ cmake ../imp \
      -DCMAKE_INCLUDE_PATH=$CMAKE_INC \
      -DCGAL_DIR=$CGAL_DIR
 
-make -j2
+make -j$3

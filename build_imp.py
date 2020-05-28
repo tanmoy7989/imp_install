@@ -150,8 +150,11 @@ conda clean -t
     if platform == "linux":
         print("Linux detected\n")
         cmd = "bash make_imp_linux.sh %s %s %d" % (envname, topdir, nproc)
+    elif platform == "darwin":
+        print("Mac OSX detected\n")
+        cmd = "bash make_imp_macosx.sh %s %s %d" % (envname, topdir, nproc)
     else:
-        raise NotImplementedError("Only linux builds tested till now")
+        raise NotImplementedError("Not tested for platform %s" % platform)
     os.system(cmd)
 
     # add a function called imppy to bashrc
