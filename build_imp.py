@@ -1,5 +1,5 @@
 """
-##Conda+Python-3 based IMP install for production or development
+Conda+Python-3 based IMP install for production or development
 
 This script builds Python-3 compatible minimal versions of the Sali-lab
 software IMP. For quick-and-dirty builds as well as more extensive protocols,
@@ -10,23 +10,23 @@ It supports either a development mode where IMP is built from scratch, so that
 you can add to it and do tests, or a production mode which simply pulls the
 latest stable pre-built binary available from conda.
 
-###Required
+Required:
 Python-3 Anaconda (or Miniconda) distribution.
 This is an entirely conda based installation, so it'll create its own
 environment. Together with IMP, post-processing and analysis tools imp-sampcon
 and PMI_Analysis are also installed.
 
-###Supported platforms
+Supported platforms:
 a) Linux (tested on Ubuntu 16.04/18.04)
 b) Mac OSX (tested on Mojave)
 c) UCSF Wynton cluster (not working fully: WIP)
 
-####Directory structure
+Directory structure:
 The top-dir can be optionally specified and defaults to ./salilab.
 IMP, PMI_Analysis and imp-sampcon are extracted respectively into topdir/imp,
 topdir/pmi_analysis and topdir/imp-sampcon. IMP is built into todir/imp_release
 
-###AUTHOR
+Author:
 Tanmoy Sanyal,
 Sali lab
 """
@@ -101,7 +101,8 @@ def _do_production_mode():
 
     # add analysis script paths to bashrc
     s = """
-export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src""" % topdir
+export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
+    """ % topdir
     with open(os.path.expanduser("~/.bashrc"), "a") as of:
         of.write(s)
 
