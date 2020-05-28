@@ -70,9 +70,22 @@ nproc = args.nproc
 
 
 def _do_production_mode():
+    #clone from source
+    sources = ["https://github.com/salilab/PMI_analysis.git",
+               "https://github.com/salilab/imp-sampcon.git"]
+
+    sinks = ["pmi_analysis", "imp_sampcon"]
+
+    for (x, y) in zip(sources, sinks):
+        print("Extracting %s" % y)
+        print("-----------------------")
+        cmd = "git clone -b master %s %s" % (x, os.path.join(topdir, y))
+        os.system(cmd)
+        print("\n\n")
+
     # write the env yml file to a temp-file
     yml_dict = {"ENVNAME": envname}
-    env_fn = os.path.abspath("impenv_prod.yml")
+    env_fn = os.path.join(topdir, "impenv.yml")
     with open("impenv.yml.template", "r") as of:
         s = of.read()
     with open(env_fn, "w") as of:
@@ -86,8 +99,11 @@ def _do_production_mode():
         """ % env_fn
     os.system(cmd)
 
-    # delete the yml file
-    os.remove(env_fn)
+    # add analysis script paths to bashrc
+    s = """
+export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src""" % topdir
+    with open(os.path.expanduser("~/.bashrc"), "a") as of:
+        of.write(s)
 
 
 def _do_dev_mode():
@@ -132,7 +148,7 @@ conda clean -t
     platform = os.uname().sysname.lower()
     if platform == "linux":
         print("Linux detected\n")
-        cmd = "bash make_linux.sh %s %s %d" % (envname, topdir, nproc)
+        cmd = "bash make_imp_linux.sh %s %s %d" % (envname, topdir, nproc)
     else:
         raise NotImplementedError("Only linux builds tested till now")
     os.system(cmd)
@@ -142,11 +158,13 @@ conda clean -t
 imppy() {
     conda activate %s
     export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
-    export PYTHONPATH=$PYTHONPATH:%s/imp-sampcon/pyext/src
     %s/imp_release/setup_environment.sh python $1 "${@:2}"
     conda deactivate
 }
-    """ % (envname, topdir, topdir, topdir)
+    """ % (envname, topdir, topdir)
+    
+    with open(os.path.expanduser("~/.bashrc"), "a") as of:
+        of.write(s)
 
 
 if __name__ == "__main__":

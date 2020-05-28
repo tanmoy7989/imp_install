@@ -10,14 +10,12 @@ dependencies:
     - numpy
     - scipy
     - matplotlib
-    - tqdm
     - biopython
-    - joblib
     - pandas
     - xlrd
 
 # IMP specific
+    - mpich
     - openmp
-    - openmpi
-    - pyrmsd
     - imp
+    - pyrmsd

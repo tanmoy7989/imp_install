@@ -10,9 +10,7 @@ dependencies:
     - numpy
     - scipy
     - matplotlib
-    - tqdm
     - biopython
-    - joblib
     - pandas
     - xlrd
 
@@ -31,6 +29,6 @@ dependencies:
     - log4cxx
     - gperftools
     - openmp
-    - openmpi
+    - mpich
     - ann
     - pyrmsd
