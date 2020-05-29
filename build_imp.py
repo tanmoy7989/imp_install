@@ -54,8 +54,7 @@ parser = argparse.ArgumentParser(description=__doc__,
 parser.add_argument("-n", "--envname", default="impenv",
                     help="IMP conda env name")
 parser.add_argument("-o", "--outdir", default="salilab",
-                    help="Master dir where everything will be installed"
-                         "for dev mode installs")
+                    help="Master dir where everything will be installed")
 parser.add_argument("-np", "--nproc", type=int, default=1,
                     help="Number of processors for parallel build")
 parser.add_argument("-d", "--disabled_modules", nargs="+", default=[],
@@ -66,7 +65,6 @@ parser.add_argument("-m", "--minimal_install", action="store_true",
 
 args = parser.parse_args()
 envname = args.envname
-dev_mode = args.dev_mode
 outdir = os.path.abspath(args.outdir)
 nproc = args.nproc
 disabled_modules = set(args.disabled_modules)
