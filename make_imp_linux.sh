@@ -21,3 +21,5 @@ cmake ../imp \
      -DIMP_DISABLED_MODULES=$3
 
 make -j$4
+
+touch .done

@@ -15,7 +15,20 @@ dependencies:
     - xlrd
 
 # IMP specific
-    - openmpi
+    - cmake
+    - cgal
+    - boost
+    - fftw
+    - eigen
+    - gsl
+    - hdf5
+    - opencv-nopython
+    - swig
+    - libtau
+    - protobuf
+    - log4cxx
+    - gperftools
     - openmp
-    - imp
+    - openmpi
+    - ann
     - pyrmsd
