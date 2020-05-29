@@ -34,6 +34,7 @@ Sali lab
 import os
 import subprocess
 import argparse
+from datetime import datetime
 
 
 # has conda?
@@ -61,12 +62,23 @@ parser.add_argument("-o", "--outdir", default="salilab",
                          "for dev mode installs")
 parser.add_argument("-np", "--nproc", type=int, default=1,
                     help="Number of processors for parallel build")
+parser.add_argument("-d", "--disabled_modules", nargs="+", default=[],
+                    help="list of IMP modules to *NOT* build")
+parser.add_argument("-m", "--minimal_install", action="store_true",
+                    help="True to do a minimal install. This disables build of heavy modules "
+                         "multifit:membrane:spb:npc:foxs:saxs_merge:npctransport")
 
 args = parser.parse_args()
 envname = args.envname
 dev_mode = args.dev_mode
 outdir = os.path.abspath(args.outdir)
 nproc = args.nproc
+disabled_modules = set(args.disabled_modules)
+minimal_install = args.minimal_install
+if minimal_install:
+    heavy_modules = ["multifit", "membrane", "spb", "npc", "npctransport",
+                     "foxs", "saxs_merge"]
+    disabled_modules |= set(heavy_modules)
 
 
 def _do_production_mode():
@@ -110,6 +122,7 @@ export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
 
 def _do_dev_mode():
     # create the top-dir
+    global disabled_modules_str
     os.makedirs(outdir, exist_ok=True)
 
     #clone from my forked repositories
@@ -138,35 +151,61 @@ def _do_dev_mode():
         of.write(s % yml_dict)
 
     # create and populate this conda environment
-    print("Creating and populating dev conda env: %s" % envname)
+    print("Creating and populating conda env: %s" % envname)
     cmd = """
 conda env create -f %s
 conda clean -t
     """ % env_fn
     os.system(cmd)
 
-    # run platform specific install-scripts
-    print("\n\nBuilding IMP")
+    # detect platform
     platform = os.uname().sysname.lower()
     if platform == "linux":
-        print("Linux detected\n")
-        cmd = "bash make_imp_linux.sh %s %s %d" % (envname, outdir, nproc)
+        script = "make_imp_linux.sh"
     elif platform == "darwin":
-        print("Mac OSX detected\n")
-        cmd = "bash make_imp_macosx.sh %s %s %d" % (envname, outdir, nproc)
+        script = "make_imp_macosx.sh"
     else:
         raise NotImplementedError("Not tested for platform %s" % platform)
+
+    # get disabled modules
+    disabled_modules_str = ":".join(disabled_modules)
+    if not disabled_modules_str:
+        disabled_modules_str = '""'
+    log_str = """
+IMP build specs:
+>>platform=%s
+>>base conda env=%s
+>>build from scratch=True
+>>number of processors for parallel build=%d
+>>disabled modules= %s
+>>minimal install=%s
+    """ % (platform, os.environ["CONDA_PREFIX"], nproc,
+           disabled_modules_str, minimal_install)
+
+    print(log_str)
+    print("\nPress any key to start the build...")
+    input()
+
+    # build!
+    cmd = "bash %s %s %s %s %d" % \
+          (script, envname, outdir, disabled_modules_str, nproc)
     os.system(cmd)
+
+    # write build log to file
+    timestamp = datetime.now().strftime("%d%B%Y_%I:%M_%p")
+    log_fn = os.path.join(outdir, "IMP_build_spec_%s.txt" % timestamp)
+    with open(log_fn, "w") as of:
+        of.write(log_str)
 
     # add necessary env variables to bashrc
     s = """
-    export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
-    IMPENV=%s/imp_release/setup_environment.sh
-}
+export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
+IMPENV=%s/imp_release/setup_environment.sh
     """ % (outdir, outdir)
     
     with open(os.path.expanduser("~/.bashrc"), "a") as of:
         of.write(s)
+
 
 
 if __name__ == "__main__":

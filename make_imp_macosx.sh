@@ -30,5 +30,6 @@ cmake ../imp \
      -DCMAKE_PREFIX_PATH=$CMAKE_ROOT \
      -DCMAKE_INCLUDE_PATH=$CMAKE_INC \
      -DCGAL_DIR=$CGAL_DIR
+     -DIMP_DISABLED_MODULES=$3
 
-make -j$3
+make -j$4

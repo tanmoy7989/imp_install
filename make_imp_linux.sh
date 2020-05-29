@@ -18,5 +18,6 @@ cmake ../imp \
      -DCMAKE_PREFIX_PATH=$CONDA_PREFIX \
      -DCMAKE_INCLUDE_PATH=$CONDA_PREFIX/include \
      -DCMAKE_LIBRARY_PATH=$CONDA_PREFIX/lib \
+     -DIMP_DISABLED_MODULES=$3
 
-make -j$3
+make -j$4
