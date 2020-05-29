@@ -29,6 +29,6 @@ dependencies:
     - log4cxx
     - gperftools
     - openmp
-    - mpich
+    - openmpi
     - ann
     - pyrmsd

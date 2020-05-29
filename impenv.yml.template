@@ -15,7 +15,7 @@ dependencies:
     - xlrd
 
 # IMP specific
-    - mpich
+    - openmpi
     - openmp
     - imp
     - pyrmsd
