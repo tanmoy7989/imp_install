@@ -2,17 +2,19 @@ name: %(ENVNAME)s
 channels:
     - conda-forge
     - salilab
+    - bioconda
 
 dependencies:
 
 # basics
-    - python=3
+    - python=3 
     - numpy
     - scipy
     - matplotlib
     - biopython
     - pandas
     - xlrd
+    - gnuplot
 
 # IMP specific
     - cmake
