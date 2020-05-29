@@ -150,10 +150,10 @@ conda clean -t
     platform = os.uname().sysname.lower()
     if platform == "linux":
         print("Linux detected\n")
-        cmd = "bash make_imp_linux.sh %s %s %d" % (envname, topdir, nproc)
+        cmd = "bash make_imp_linux.sh %s %s %d" % (envname, outdir, nproc)
     elif platform == "darwin":
         print("Mac OSX detected\n")
-        cmd = "bash make_imp_macosx.sh %s %s %d" % (envname, topdir, nproc)
+        cmd = "bash make_imp_macosx.sh %s %s %d" % (envname, outdir, nproc)
     else:
         raise NotImplementedError("Not tested for platform %s" % platform)
     os.system(cmd)
