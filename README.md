@@ -20,7 +20,7 @@ environment. Together with IMP, post-processing and analysis tools imp-sampcon
 and PMI_Analysis are also installed.
 
 ### Supported platforms:
-a) Linux (tested on Fedora-31, WIP: Ubuntu-20.04, UCSF Wynton cluster)
+a) Linux (tested on Fedora-31, Ubuntu-20.04, WIP: UCSF Wynton cluster)
 
 b) Mac OSX Mojave (WIP)
 
