@@ -56,7 +56,7 @@ parser.add_argument("-n", "--envname", default="impenv",
                     help="IMP conda env name")
 parser.add_argument("-dev", "--dev_mode", action="store_true",
                     help="True to do a 'dev-mode' install of IMP from scratch")
-parser.add_argument("-d", "--topdir", default="salilab",
+parser.add_argument("-o", "--outdir", default="salilab",
                     help="Master dir where everything will be installed"
                          "for dev mode installs")
 parser.add_argument("-np", "--nproc", type=int, default=1,
@@ -65,11 +65,12 @@ parser.add_argument("-np", "--nproc", type=int, default=1,
 args = parser.parse_args()
 envname = args.envname
 dev_mode = args.dev_mode
-topdir = os.path.abspath(args.topdir)
+outdir = os.path.abspath(args.outdir)
 nproc = args.nproc
 
 
 def _do_production_mode():
+    #TODO: imp and openmpi conda installs have a conflict!
     #clone from source
     sources = ["https://github.com/salilab/PMI_analysis.git",
                "https://github.com/salilab/imp-sampcon.git"]
@@ -79,13 +80,13 @@ def _do_production_mode():
     for (x, y) in zip(sources, sinks):
         print("Extracting %s" % y)
         print("-----------------------")
-        cmd = "git clone -b master %s %s" % (x, os.path.join(topdir, y))
+        cmd = "git clone -b master %s %s" % (x, os.path.join(outdir, y))
         os.system(cmd)
         print("\n\n")
 
     # write the env yml file to a temp-file
     yml_dict = {"ENVNAME": envname}
-    env_fn = os.path.join(topdir, "impenv.yml")
+    env_fn = os.path.join(outdir, "impenv.yml")
     with open("impenv.yml.template", "r") as of:
         s = of.read()
     with open(env_fn, "w") as of:
@@ -102,14 +103,14 @@ def _do_production_mode():
     # add analysis script paths to bashrc
     s = """
 export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
-    """ % topdir
+    """ % outdir
     with open(os.path.expanduser("~/.bashrc"), "a") as of:
         of.write(s)
 
 
 def _do_dev_mode():
     # create the top-dir
-    os.makedirs(topdir, exist_ok=True)
+    os.makedirs(outdir, exist_ok=True)
 
     #clone from my forked repositories
     sources = ["https://github.com/salilab/imp.git",
@@ -121,16 +122,16 @@ def _do_dev_mode():
     for (x, y) in zip(sources, sinks):
         print("Extracting %s" % y)
         print("-----------------------")
-        cmd = "git clone -b master %s %s" % (x, os.path.join(topdir, y))
+        cmd = "git clone -b master %s %s" % (x, os.path.join(outdir, y))
         os.system(cmd)
         if y == "imp":
             cmd_next = "cd %s && git submodule update --init && ./setup_git.py"
-            os.system(cmd_next % os.path.join(topdir, y))
+            os.system(cmd_next % os.path.join(outdir, y))
         print("\n\n")
 
     # write the env yml file to topdir
     yml_dict = {"ENVNAME": envname}
-    env_fn = os.path.join(topdir, "impenv.yml")
+    env_fn = os.path.join(outdir, "impenv.yml")
     with open("impenv_dev.yml.template", "r") as of:
         s = of.read()
     with open(env_fn, "w") as of:
@@ -157,15 +158,12 @@ conda clean -t
         raise NotImplementedError("Not tested for platform %s" % platform)
     os.system(cmd)
 
-    # add a function called imppy to bashrc
+    # add necessary env variables to bashrc
     s = """
-imppy() {
-    conda activate %s
     export PYTHONPATH=$PYTHONPATH:%s/pmi_analysis/pyext/src
-    %s/imp_release/setup_environment.sh python $1 "${@:2}"
-    conda deactivate
+    IMPENV=%s/imp_release/setup_environment.sh
 }
-    """ % (envname, topdir, topdir)
+    """ % (outdir, outdir)
     
     with open(os.path.expanduser("~/.bashrc"), "a") as of:
         of.write(s)
