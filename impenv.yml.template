@@ -14,9 +14,8 @@ dependencies:
     - biopython
     - pandas
     - xlrd
-    - gnuplot
 
-# IMP specific
+# IMP
     - cmake
     - cgal
     - boost
@@ -33,4 +32,9 @@ dependencies:
     - openmp
     - openmpi
     - ann
-    - pyrmsd
+
+# PMI and sampcon
+   - seaborn
+   - hdbscan
+   - pyrmsd
+   - gnuplot
