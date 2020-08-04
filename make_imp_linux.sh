@@ -8,7 +8,7 @@ CGAL_DIR=$CONDA_PREFIX/lib/cmake/CGAL
 
 # create a new directory in which to build IMP
 cd $2
-mkdir ./imp_release
+mkdir -p ./imp_release
 
 # build IMP
 cd ./imp_release
@@ -21,5 +21,4 @@ cmake ../imp \
      -DIMP_DISABLED_MODULES=$3
 
 make -j$4
-
 touch .done

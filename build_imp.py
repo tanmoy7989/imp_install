@@ -82,10 +82,10 @@ if minimal_install:
 # create the output dir
 os.makedirs(outdir, exist_ok=True)
 
-# extract from salilab repos
-sources = ["https://github.com/salilab/imp.git",
-           "https://github.com/salilab/PMI_analysis.git",
-           "https://github.com/salilab/imp-sampcon.git"]
+# extract from my local repos
+sources = ["https://github.com/tanmoy7989/imp.git",
+           "https://github.com/tanmoy7989/PMI_analysis.git",
+           "https://github.com/tanmoy7989/imp-sampcon.git"]
 
 sinks = ["imp", "pmi_analysis", "imp_sampcon"]
 
@@ -169,3 +169,27 @@ IMPENV=%s/imp_release/setup_environment.sh
     
     with open(os.path.expanduser("~/.bashrc"), "a") as of:
         of.write(s)
+
+# leave a slightly modified copy of the build script in the output directory to do incremental builds later on
+
+with open(script, "r") as of:
+    srcipt_src = of.readlines()
+
+script_src_modified = []
+for s in srcipt_src:
+    s_modified = None
+    if "$1" in s:
+        s_modified = "conda activate %s\n" % envname
+    elif "$2" in s:
+        s_modified = ""
+    elif "$3" in s:
+        s_modified = " "*5 + "-DIMP_DISABLED_MODDULES=%s\n" % disabled_modules_str
+    elif "$4" in s:
+        s_modified = "make -j%d\n" % (nproc)
+    else:
+        s_modified = s
+    script_src_modified.append(s_modified)
+
+script_modified = os.path.join(outdir, "make_imp_%s_%s.sh" % (platform, timestamp))
+with open(script_modified, "w") as of:
+    of.write("".join(script_src_modified))
