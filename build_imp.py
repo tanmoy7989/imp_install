@@ -92,7 +92,7 @@ sinks = ["imp", "pmi_analysis", "imp_sampcon"]
 for (x, y) in zip(sources, sinks):
     print("Extracting %s" % y)
     print("-----------------------")
-    cmd = "git clone -b master %s %s" % (x, os.path.join(outdir, y))
+    cmd = "git clone %s %s" % (x, os.path.join(outdir, y))
     os.system(cmd)
     if y == "imp":
         cmd_next = "cd %s && git submodule update --init && ./setup_git.py"
@@ -113,7 +113,7 @@ cmd = """
 conda env create -f %s
 conda clean -t
 """ % env_fn
-os.system(cmd)
+#os.system(cmd)
 
 # detect platform
 platform = os.uname().sysname.lower()
@@ -141,7 +141,7 @@ IMP build specs:
 
 print(log_str)
 print("\nPress any key to start the build...")
-input()
+#input()
 
 # build!
 cmd = "bash %s %s %s %s %d" % \

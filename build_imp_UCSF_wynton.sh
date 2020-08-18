@@ -10,7 +10,7 @@
 #$ -l scratch=200G
 #
 #$ -pe smp 8
-#$ -N s_100
+#$ -N imp_install
 #$ -o /wynton/scratch/tsanyal/
 #$ -e /wynton/scratch/tsanyal/
 
